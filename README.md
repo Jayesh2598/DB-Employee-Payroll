@@ -27,3 +27,8 @@ INSERT INTO employee_payroll(name , salary , start) VALUES
 ```
 ## UC4- Retrieve employee payroll data from database
 `select * from employee_payroll;`
+## UC5- Retrieve salary data of particular employee and employees joined in a particular date range
+### Retrieving salary of a particular employee
+`SELECT salary FROM employee_payroll WHERE name = 'Terisa';`
+### Retrieving employees joined after 2019-05-01 till now
+`SELECT * FROM employee_payroll WHERE start BETWEEN CAST('2019-05-01' AS DATE) AND DATE(NOW());`
