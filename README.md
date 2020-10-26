@@ -32,3 +32,12 @@ INSERT INTO employee_payroll(name , salary , start) VALUES
 `SELECT salary FROM employee_payroll WHERE name = 'Terisa';`
 ### Retrieving employees joined after 2019-05-01 till now
 `SELECT * FROM employee_payroll WHERE start BETWEEN CAST('2019-05-01' AS DATE) AND DATE(NOW());`
+## UC5- Add a new column in employee payroll and set values to it
+### Adding a new column gender after name column
+`ALTER TABLE employee_payroll ADD gender CHAR(1) AFTER name;`
+### Set gender for male employees as M
+`UPDATE employee_payroll set gender = 'M' WHERE name = 'Bill' or name = 'Charlie' or name = 'Sam';`
+### Set gender for female employees as F
+`UPDATE employee_payroll set gender = 'F' WHERE name = 'Terisa';`
+### See table entries
+`select * from employee_payroll;`
