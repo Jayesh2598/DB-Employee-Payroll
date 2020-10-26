@@ -25,5 +25,5 @@ INSERT INTO employee_payroll(name , salary , start) VALUES
     -> ('Charlie', 3000000.00, '2020-05-21'),
     -> ('Sam', 4000000.00, '2021-05-13');
 ```
-### See data in table
+## UC4- Retrieve employee payroll data from database
 `select * from employee_payroll;`
