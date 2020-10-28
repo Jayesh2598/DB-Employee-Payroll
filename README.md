@@ -83,13 +83,67 @@ insert into employee_payroll (name, department, gender, basic_pay, deductions, t
 ## UC11- Implement the ER diagram by making tables
 ### Creating company table
 ```
+create table company
+    -> (
+    -> company_id INT NOT NULL PRIMARY KEY,
+    -> company_name VARCHAR(150) NOT NULL
+    -> );
+```
+### Creating employee table
+```
+create table employee
+    -> (
+    -> employee_id INT unsigned NOT NULL auto_increment PRIMARY KEY,
+    -> name VARCHAR(150) NOT NULL,
+    -> company_id INT NOT NULL,
+    -> gender CHAR(1),
+    -> address VARCHAR(250),
+    -> phone_number VARCHAR(15),
+    -> FOREIGN KEY (company_id) REFERENCES company (company_id)
+    -> );
+```
+### Creating department table
+```
+create table department
+    -> (
+    -> department_id INT NOT NULL PRIMARY KEY,
+    -> department_name VARCHAR(150) NOT NULL
+    -> );
+```
+### Creating payroll table
+```
+create table payroll
+    -> (
+    -> employee_id INT unsigned NOT NULL PRIMARY KEY,
+    -> basic_pay DOUBLE NOT NULL,
+    -> deductions DOUBLE NOT NULL,
+    -> taxable_pay DOUBLE NOT NULL,
+    -> tax DOUBLE NOT NULL,
+    -> net_pay DOUBLE NOT NULL,
+    -> FOREIGN KEY (employee_id) REFERENCES employee (employee_id)
+    -> );
+```
+### Creating employee_department table
+```
+create table employee_department
+    -> (
+    -> employee_id INT unsigned NOT NULL,
+    -> department_id INT NOT NULL,
+    -> FOREIGN KEY (employee_id) REFERENCES employee (employee_id),
+    -> FOREIGN KEY (department_id) REFERENCES department (department_id)
+    -> );
+```
+
+## UC12- Ensuring all retrieve querries are functioning in new database system
+### Inserting into company table
+```
 INSERT INTO company(company_id, company_name) VALUES
     -> (1,'Capgemini'),
     -> (2,'Apple'),
     -> (3,'Tesla'),
     -> (4,'Niantic');
 ```
-### Creating employee table
+### Inserting into employee table
 ```
 INSERT INTO employee(name,company_id,gender,address,phone_number) VALUES
     -> ('Bill', 1, 'M', 'NY', 7045279233),
@@ -97,7 +151,7 @@ INSERT INTO employee(name,company_id,gender,address,phone_number) VALUES
     -> ('Emilia', 1, 'F', 'London', 7045279235),
     -> ('Claire', 3, 'F', 'Washington', 7045279236);
 ```
-### Creating department table
+### Inserting into department table
 ```
 INSERT INTO department (department_id, department_name) VALUES
     -> (101, 'Marketing'),
@@ -105,7 +159,7 @@ INSERT INTO department (department_id, department_name) VALUES
     -> (103, 'R&D'),
     -> (104, 'HR');
 ```
-### Creating payroll table
+### Inserting into payroll table
 #### Setting default values to taxable_pay and net_pay as these are derived attributes
 ```
 ALTER table payroll ALTER taxable_pay SET DEFAULT (basic_pay-deductions);
@@ -120,7 +174,7 @@ INSERT INTO payroll (employee_id, basic_pay, deductions, tax) VALUES
     -> (4,40000.00,4000.00,35.00);
 ```
 
-### Creating employee_department table
+### Inserting into employee_department table
 ```
 INSERT INTO employee_department (employee_id, department_id) VALUES
     -> (1,101),
@@ -133,10 +187,13 @@ INSERT INTO employee_department (employee_id, department_id) VALUES
     -> (4,104);
 ```
 
-### Checking if database is working correctly
-```
-select employee.name, department.department_name, payroll.net_pay from employee, department, employee_department, payroll
-    -> where employee.employee_id = employee_department.employee_id and
-    -> department.department_id = employee_department.department_id and
-    -> employee.employee_id = payroll.employee_id;
-```
+### Total salary according to gender
+`select e.gender,sum(p.net_pay) from employee e, payroll p where p.employee_id=e.employee_id group by e.gender;`
+### Average salary according to gender
+`select e.gender,avg(p.net_pay) from employee e, payroll p where p.employee_id=e.employee_id group by e.gender;`
+### Minumum salary according to gender
+`select e.gender,min(p.net_pay) from employee e, payroll p where p.employee_id=e.employee_id group by e.gender;`
+### Maximum salary according to gender
+`select e.gender,max(p.net_pay) from employee e, payroll p where p.employee_id=e.employee_id group by e.gender;`
+### Count of employees according to gender
+`select gender,count(employee_id) from employee group by gender;`
