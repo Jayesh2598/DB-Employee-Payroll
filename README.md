@@ -55,3 +55,11 @@ INSERT INTO employee_payroll(name , salary , start) VALUES
 `SELECT gender, MAX(salary) FROM employee_payroll GROUP BY gender;`
 ### Employee Count according to gender
 `SELECT gender, COUNT(id) AS No_Of_Employees FROM employee_payroll GROUP BY gender;`
+
+## UC8- Extend employee_payroll to contain employee phone, address and department
+### Adding phone
+`ALTER TABLE employee_payroll ADD phone_number VARCHAR(15) AFTER name;`
+### Adding address and setting default value to 'TBD'
+`ALTER TABLE employee_payroll ADD address VARCHAR(250) DEFAULT 'TBD' AFTER phone_number;`
+### Adding non-nullable column department
+`ALTER TABLE employee_payroll ADD department VARCHAR(150) NOT NULL AFTER address;`
