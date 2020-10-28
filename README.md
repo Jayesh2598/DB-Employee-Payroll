@@ -73,9 +73,70 @@ ALTER TABLE employee_payroll ADD tax DOUBLE NOT NULL AFTER taxable_pay;
 ALTER TABLE employee_payroll ADD net_pay DOUBLE NOT NULL AFTER tax;
 ```
 
-## UC10- Make Terisa an employee belonging to Sales and Marketting departments
+## UC10.1- Make Terisa an employee belonging to Sales and Marketting departments
 ```
 update employee_payroll set department='Sales' where name='Terisa';
 insert into employee_payroll (name, department, gender, basic_pay, deductions, taxable_pay, tax, net_pay, start) VALUES
     -> ('Terisa', 'Marketing', 'F', 1000000.00, 50000.00, 150000.00, 50000.00, 100000.00, '2019-11-13');
+```
+
+## UC11- Implement the ER diagram by making tables
+### Creating company table
+```
+INSERT INTO company(company_id, company_name) VALUES
+    -> (1,'Capgemini'),
+    -> (2,'Apple'),
+    -> (3,'Tesla'),
+    -> (4,'Niantic');
+```
+### Creating employee table
+```
+INSERT INTO employee(name,company_id,gender,address,phone_number) VALUES
+    -> ('Bill', 1, 'M', 'NY', 7045279233),
+    -> ('Charlie', 2, 'M', 'SF', 7045279234),
+    -> ('Emilia', 1, 'F', 'London', 7045279235),
+    -> ('Claire', 3, 'F', 'Washington', 7045279236);
+```
+### Creating department table
+```
+INSERT INTO department (department_id, department_name) VALUES
+    -> (101, 'Marketing'),
+    -> (102, 'Sales'),
+    -> (103, 'R&D'),
+    -> (104, 'HR');
+```
+### Creating payroll table
+#### Setting default values to taxable_pay and net_pay as these are derived attributes
+```
+ALTER table payroll ALTER taxable_pay SET DEFAULT (basic_pay-deductions);
+ALTER table payroll ALTER net_pay SET DEFAULT (taxable_pay*(1-(tax/100)));
+```
+#### Inserting values in payroll
+```
+INSERT INTO payroll (employee_id, basic_pay, deductions, tax) VALUES
+    -> (1,10000.00,1000.00,20.00),
+    -> (2,20000.00,2000.00,25.00),
+    -> (3,30000.00,3000.00,30.00),
+    -> (4,40000.00,4000.00,35.00);
+```
+
+### Creating employee_department table
+```
+INSERT INTO employee_department (employee_id, department_id) VALUES
+    -> (1,101),
+    -> (1,102),
+    -> (2,103),
+    -> (3,101),
+    -> (3,104),
+    -> (4,101),
+    -> (4,102),
+    -> (4,104);
+```
+
+### Checking if database is working correctly
+```
+select employee.name, department.department_name, payroll.net_pay from employee, department, employee_department, payroll
+    -> where employee.employee_id = employee_department.employee_id and
+    -> department.department_id = employee_department.department_id and
+    -> employee.employee_id = payroll.employee_id;
 ```
