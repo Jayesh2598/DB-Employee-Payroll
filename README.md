@@ -63,3 +63,12 @@ INSERT INTO employee_payroll(name , salary , start) VALUES
 `ALTER TABLE employee_payroll ADD address VARCHAR(250) DEFAULT 'TBD' AFTER phone_number;`
 ### Adding non-nullable column department
 `ALTER TABLE employee_payroll ADD department VARCHAR(150) NOT NULL AFTER address;`
+
+## UC9- Extend employee_payroll to contain basic_pay, deductions, taxable_pay, tax, net_pay
+```
+ALTER TABLE employee_payroll RENAME COLUMN salary TO basic_pay;
+ALTER TABLE employee_payroll ADD deductions DOUBLE NOT NULL AFTER basic_pay;
+ALTER TABLE employee_payroll ADD taxable_pay DOUBLE NOT NULL AFTER deductions;
+ALTER TABLE employee_payroll ADD tax DOUBLE NOT NULL AFTER taxable_pay;
+ALTER TABLE employee_payroll ADD net_pay DOUBLE NOT NULL AFTER tax;
+```
